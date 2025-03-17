@@ -54,14 +54,16 @@ def print_total_income_and_expense():
     print(f'Total Income: {total_income:.2f}')
     print(f'Total Expense: {total_expense:.2f}')
 
-def get_expenses_by_category(transactions):
+def get_expenses_by_category():
+    transactions = load_transactions()
     expenses = defaultdict(float)
     for transaction in transactions:
         if transaction['Type'] == 'Expense':
             expenses[transaction['Category']] += transaction['Amount']
     return expenses
 
-def get_income_by_category(transactions):
+def get_income_by_category():
+    transactions = load_transactions()
     income = defaultdict(float)
     for transaction in transactions:
         if transaction["Type"] == "Income":
@@ -69,13 +71,11 @@ def get_income_by_category(transactions):
     return income
 
 # Plot bar chart
-def plot_expenses(type):
-    transactions = load_transactions()
-
+def plot_bar_chart(type):
     if type == 'Income':
-        expenses = get_income_by_category(transactions)
+        expenses = get_income_by_category()
     elif type == 'Expense':
-        expenses = get_expenses_by_category(transactions)
+        expenses = get_expenses_by_category()
 
     categories = list(expenses.keys())
     amounts = list(expenses.values())
@@ -91,7 +91,20 @@ def plot_expenses(type):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
-    
+
+# Plot pie chart    
+def plot_pie_chart(type):
+    if type == 'Income':
+        expenses = get_income_by_category()
+    elif type == 'Expense':
+        expenses = get_expenses_by_category()
+    plt.figure(figsize=(7, 7))
+    plt.pie(expenses.values(), labels=expenses.keys(), autopct='%1.1f%%', colors=plt.cm.Paired.colors, startangle=140)
+    plt.title("Income Distribution by Category" if type == 'Income' else "Spending Distribution by Category")
+    plt.show()    
+
+# Plot line chart
+
 def print_transactions():
     transactions = load_transactions()
 
@@ -104,6 +117,7 @@ def print_transactions():
         print(f"\nDate: {transaction['Date'].strftime('%Y-%m-%d')} | Type: {transaction['Type']} | Amount: {transaction['Amount']} | Category: {transaction['Category']} | Description: {transaction['Description']}", end='')
     
 def print_menu():
+
     choice = 0
     while choice != 6:
         print("""
@@ -124,14 +138,62 @@ def print_menu():
         elif choice == '3':
             print_total_income_and_expense()
         elif choice == '4':
-            plot_expenses('Expense')
+            pass
         elif choice == '5':
-            plot_expenses('Income')
+            pass
         elif choice == '6':
             print("Exiting the program. Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
         
+def get_expenses_over_time():
+    transactions = load_transactions()
+    daily_expenses = defaultdict(float)
+    for transaction in transactions:
+        if transaction["Type"] == "Expense":
+            date = transaction["Date"]
+            daily_expenses[date] += transaction["Amount"]
+
+    sorted_dates = sorted(daily_expenses.keys())
+    sorted_amounts = [daily_expenses[date] for date in sorted_dates]
+
+    return sorted_dates, sorted_amounts
+
+def plot_expenses_over_time():
+    dates, amounts = get_expenses_over_time()
+    
+    plt.figure(figsize=(20, 5))
+    plt.plot(dates, amounts, marker='o', linestyle='-', color='red')
+    plt.title("Expenses Over Time")
+    plt.xlabel("Date")
+    plt.ylabel("Amount ($)")
+    plt.xticks(rotation=45)
+    plt.grid()
+    plt.show()
+
+def get_income_expense_summary():
+    transactions = load_transactions()
+    income, expense = 0, 0
+    for transaction in transactions:
+        if transaction["Type"] == "Income":
+            income += transaction["Amount"]
+        elif transaction["Type"] == "Expense":
+            expense += transaction["Amount"]
+    return income, expense
+
+def plot_income_vs_expense():
+    income, expense = get_income_expense_summary()
+    
+    categories = ["Income", "Expense"]
+    values = [income, expense]
+
+    plt.figure(figsize=(6, 6))
+    plt.bar(categories, values, color=["green", "red"])
+    plt.title("Income vs. Expenses")
+    plt.ylabel("Amount ($)")
+    plt.show()
+
+
 if __name__ == '__main__':
-   print_menu()
+    pass
