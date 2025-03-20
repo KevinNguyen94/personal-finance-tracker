@@ -37,7 +37,7 @@ def add_new_transaction():
             writer.writeheader()
         writer.writerow(new_transaction)
 
-#Sumerize transactions total income and total expense
+#Summarize transactions total income and total expense
 def print_total_income_and_expense():
     total_income = 0
     total_expense = 0
@@ -127,7 +127,8 @@ def print_menu():
         3. View Total Income and Expense
         4. Plot Expenses by Category
         5. Plot Income by Category
-        6. Exit
+        6. Plot Expenses over time
+        7. Exit
         """)
         choice = input("Enter your choice (1-6): ")
 
@@ -137,11 +138,14 @@ def print_menu():
             print_transactions()
         elif choice == '3':
             print_total_income_and_expense()
+            plot_income_vs_expense()
         elif choice == '4':
-            pass
+            plot_pie_chart('Expense')
         elif choice == '5':
-            pass
+            plot_pie_chart('Income')
         elif choice == '6':
+            plot_expenses_over_time()
+        elif choice == '7':
             print("Exiting the program. Goodbye!")
             break
         else:
@@ -196,4 +200,4 @@ def plot_income_vs_expense():
 
 
 if __name__ == '__main__':
-    pass
+    print_menu()
