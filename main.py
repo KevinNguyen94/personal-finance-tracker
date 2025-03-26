@@ -1,5 +1,7 @@
 import database
 import function
 
-database.add_transaction("2025-03-10", "Expense", 45.00, "Dining", "Dinner with friends")
-database.run_query("SELECT * FROM transactions")
+# database.clear_transaction_table()
+# database.insert_data_csv_to_sqlite()
+# database.add_transaction('2025-03-09','Income','3877.61','Gift','Gift transaction')
+database.print_all_transactions()
